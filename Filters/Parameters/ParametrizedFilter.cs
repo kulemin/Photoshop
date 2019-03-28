@@ -8,16 +8,16 @@ namespace MyPhotoshop
     public abstract class ParametrizedFilter<TParameters> : IFilter
         where TParameters : IParameters, new()
     {
-       
+        IParametersHandler<TParameters> handler = new SimpleParametersHandler<TParameters>();
       public ParameterInfo[] GetParameters()
         {
-            return new TParameters().GetDescription();
+            return handler.GetDescription();
         }
         
         public Photo Process(Photo photo, double[] values)
         {
-            var parameters = new TParameters();
-            parameters.Parse(values);
+            var parameters = handler.CreateParameters(values);
+           
             return Process(photo, parameters);
         }
         public abstract Photo Process(Photo photo, TParameters values);
